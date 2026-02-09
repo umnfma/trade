@@ -86,7 +86,7 @@ class MyMomentumStrategy(Strategy):
                 if buy_signal and not self.portfolio.is_invested_in(self.symbol):
                     # TODO =============================
                     # set quantity to most you can afford
-                    qty = math.floor(self.portfolio.cash() / price)
+                    qty = math.floor(self.portfolio.cash() / (price * 0.95))
                     logger.info(f"{hl_green}Buy signal! Posting market order for {qty} shares of {self.symbol}{reset}")
                     self.post_market_order(self.symbol, quantity=qty)
                     self.order_pending = True
