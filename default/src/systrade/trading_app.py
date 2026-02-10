@@ -11,7 +11,6 @@ from systrade.feed import AlpacaLiveStockFeed
 from systrade.broker import AlpacaBroker
 from systrade.strategy import Strategy
 from systrade.data import BarData, ExecutionReport
-from systrade.portfolio import PortfolioView, Position
 from systrade.engine import Engine
 
 import math
