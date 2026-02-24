@@ -2,8 +2,10 @@
 
 ## Quick Links
 [Homepage](https://trade.mcfam.forum)
-[Rules](https://trade.mcfam.forum/#fine-print)
+
 [Code base](https://github.com/umnfma/trade)
+
+[Forum](https://mcfam.forum)
 
 ## Getting Started
 1. [Join the forum](https://mcfam.forum/index.php?register/)
@@ -25,7 +27,7 @@ git clone git@github.com:umnfma/trade.git & cd trade
 ```powershell
 git clone git@github.com:umnfma/trade.git; cd trade
 ```
-4. Implement your trading strategy in ```src/systrade/trading_app/py```.
+4. Implement your trading strategy in ```src/systrade/trading_app.py```.
 
 ## Installation
 You can run this app in a python environment, but I would recommend running it
@@ -39,7 +41,7 @@ a Dockerfile so that should be the only thing you need to configure the containe
 once you have Docker installed. (I use docker from the terminal but docker 
 does also have a nice GUI called Docker Desktop).
 
-## Run inside the terminal
+### Run inside the terminal
 You can run the app in a python environment like a python virtual environment or an environment
 with a python kernel managed by anaconda. I will not be covering that here.
 
@@ -65,7 +67,9 @@ Follow the steps in the section below for a slight improvement.
 ### Run With Docker (the following are all bash commands)
 Go to the folders root directory (the same directory with the dockerfile, ```env.list``` and ```src/``` directory),
 and run the following:
-```docker build -t systrade . && docker run --env-file env.list -d systrade```
+```
+docker build -t systrade . && docker run --env-file env.list -d systrade
+```
 First it will build the image with the tag (-t) that you give it (systrade, in this case)
 and then it will run the container that it built as a daemon (-d) with the environment variable list that you 
 created with your Alpaca API keys (env.list).
@@ -97,7 +101,7 @@ Exited containers will be listed as to have a status of ```exited``` and probabl
 Remove exited containers with ``docker rm <container_name>```.
 
 ## Expert Tips & Tricks
-If you are a self-proclaimed e1337 h4xor, you can also run this with your favorite, process management software.
+If you are a self-proclaimed e1337 h4xor, you can also run this with your favorite process management software.
 I would recommend systemd..... but unfortunately for the competition, you are expected to make it run with docker.
 
 ## Deadlines
