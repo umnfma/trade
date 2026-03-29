@@ -56,9 +56,12 @@ class BarData:
 
 
 class OrderType(IntEnum):
-    """The type of order. Currently on market orders are supported."""
+    """The type of order."""
 
     MARKET = 1
+    LIMIT = 2
+    STOP = 3
+    STOP_LIMIT = 4
 
 
 @dataclass(init=True, repr=True, eq=True)
@@ -71,6 +74,8 @@ class Order:
     type: OrderType
     submit_time: datetime
     price: Optional[float] = None
+    limit_price: Optional[float] = None
+    stop_price: Optional[float] = None
 
 
 @dataclass(init=True, repr=True, eq=True)

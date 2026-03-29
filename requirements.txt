@@ -6,3 +6,5 @@ alpaca-py>=0.11.0
 pytz>=2024.1
 attrs>=23.2.0
 psycopg
+hmmlearn>=0.3.0
+scipy>=1.12.0

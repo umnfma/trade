@@ -7,13 +7,23 @@ class Engine:
     """Orchestrator for the different components"""
 
     def __init__(
-        self, feed: Feed, broker: Broker, strategy: Strategy, cash: float
+        self,
+        feed: Feed,
+        broker: Broker,
+        strategy: Strategy,
+        cash: float,
+        portfolio: PortfolioView | None = None,
     ) -> None:
         self._feed = feed
         self._broker = broker
         self._strategy = strategy
         self._stop_flag = False
-        self._portfolio = LivePortfolioView(broker=self._broker)
+        if portfolio is not None:
+            self._portfolio = portfolio
+        elif isinstance(broker, AlpacaBroker):
+            self._portfolio = LivePortfolioView(broker=broker)
+        else:
+            self._portfolio = Portfolio(cash=cash, broker=broker)
 
     def run(self) -> None:
         """Run the strategy"""

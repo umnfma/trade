@@ -12,6 +12,9 @@ from systrade.broker import AlpacaBroker
 from systrade.strategy import Strategy
 from systrade.data import BarData, ExecutionReport
 from systrade.engine import Engine
+from systrade.strategies.vwap_mean_reversion import VWAPMeanReversionStrategy
+from systrade.strategies.quant_vwap import QuantVWAPStrategy
+from systrade.strategies.alpha_vwap import AlphaVWAPStrategy
 
 import math
 # ---------------------------
@@ -250,15 +253,31 @@ def main():
 
     feed = AlpacaLiveStockFeed()
     broker = AlpacaBroker()
-    # i'd recommend choosing which strategy to run here
-    strategy = MomentumStrategy(symbol="SPY")
 
-    # NOTE: theres almost surely a better way to store this cash info
-    #+we could probably just get it from the API... I'm fairly certain
-    #+starting_cash is kind of irrelevant since the strategy already 
-    #+just gets the buying power from the live account.
-    #... but alas...
-    starting_cash = 1000000
+    # --- Strategy selection ---
+    # AlphaVWAPStrategy: gap scan + TWAP execution + HMM/FFT signals
+    # QuantVWAPStrategy: HMM regime detection + FFT cycle timing
+    # VWAPMeanReversionStrategy: basic intraday VWAP mean reversion
+    # MomentumStrategy / LongStrategy: legacy strategies (single-symbol)
+    strategy = AlphaVWAPStrategy(
+        symbols=("NVDA", "GOOG", "XLE", "AAPL", "QQQ"),
+        max_active_symbols=2,  # gap-scan selects top 2 each morning
+        min_gap_pct=0.15,      # minimum gap to consider
+        twap_tranches=3,       # split entries into 3 limit orders
+        twap_spacing=2,        # 2 bars between tranches
+        twap_offset_bps=1.0,   # limit price 1 bps inside spread
+        entry_z=3.0,
+        fft_entry_z=2.0,
+        exit_z=1.0,
+        leverage=1.0,          # live: buying_power() already includes Alpaca's 4x
+        position_frac=0.50,
+        max_positions=2,
+        min_bars=20,
+        regime_confidence=0.60,
+        cooldown_bars=180,     # 3-hour cooldown between trades per symbol
+    )
+
+    starting_cash = 1_000_000
     engine = Engine(feed=feed, broker=broker, strategy=strategy, cash=starting_cash)
 
     logger.info("Engine initialized. Starting run...")

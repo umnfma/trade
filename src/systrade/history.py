@@ -55,11 +55,7 @@ class FileHistoryProvider(HistoryProvider):
         
         df = pd.read_csv(self._path)
         
-        df["Date"] = pd.to_datetime(df["Date"])
-        if df["Date"].dt.tz is None:
-            df["Date"] = df["Date"].dt.tz_localize(self._tz, ambiguous='NaT', nonexistent='NaT')
-        else:
-            df["Date"] = df["Date"].dt.tz_convert(self._tz)
+        df["Date"] = pd.to_datetime(df["Date"], utc=True).dt.tz_convert(self._tz)
         
  
         df["Symbol"] = df["Symbol"].astype(pd.StringDtype(storage="python"))

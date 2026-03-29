@@ -63,19 +63,41 @@ class Strategy(ABC):
         self._subscribe_hook(symbol)
 
     def post_market_order(self, symbol: str, quantity: float) -> None:
-        order_id = str(uuid.uuid4())
-
-        """Post order to broker"""
+        """Post a market order to broker"""
         order = Order(
-            #id=str(self._current_order_id)
-            id=str(order_id),
+            id=str(uuid.uuid4()),
             symbol=symbol,
             quantity=quantity,
             type=OrderType.MARKET,
             submit_time=self.current_time,
         )
         self._current_order_id += 1
+        self._post_order_hook(order)
 
+    def post_limit_order(self, symbol: str, quantity: float, limit_price: float) -> None:
+        """Post a limit order to broker"""
+        order = Order(
+            id=str(uuid.uuid4()),
+            symbol=symbol,
+            quantity=quantity,
+            type=OrderType.LIMIT,
+            submit_time=self.current_time,
+            limit_price=limit_price,
+        )
+        self._current_order_id += 1
+        self._post_order_hook(order)
+
+    def post_stop_order(self, symbol: str, quantity: float, stop_price: float) -> None:
+        """Post a stop order to broker"""
+        order = Order(
+            id=str(uuid.uuid4()),
+            symbol=symbol,
+            quantity=quantity,
+            type=OrderType.STOP,
+            submit_time=self.current_time,
+            stop_price=stop_price,
+        )
+        self._current_order_id += 1
         self._post_order_hook(order)
 
     @abstractmethod
